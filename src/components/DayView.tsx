@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ArrowLeft } from '@phosphor-icons/react'
-import { ArrowLeft } from '@phosphor-icons/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { McDonaldsLocator } from '@/components/McDonaldsLocator'
 import { WeatherCard } from '@/components/WeatherCard'
@@ -72,20 +72,24 @@ export function DayView({ day, onBack }: DayViewProps) {
         </motion.header>
 
         <main className="max-w-4xl mx-auto px-6 py-8">
-          >
-              Activities
-            <div className="space-y-3">
-                <motion.div
-           
-                  transition={{ duration: 0.3, delay: index * 0.05 
-                  <Activ
-              ))}
-          </motion.div>
+          <h2 className="text-2xl font-bold text-foreground mb-4">Activities</h2>
+          <div className="space-y-3">
+            {day.activities.map((activity, index) => (
+              <motion.div
+                key={activity.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <ActivityCard activity={activity} />
+              </motion.div>
+            ))}
+          </div>
+        </main>
       </div>
+    </div>
   )
-
-
-
+}
 
 
 
