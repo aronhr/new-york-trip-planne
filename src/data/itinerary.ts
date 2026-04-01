@@ -12,6 +12,16 @@ export interface Activity {
   notes?: string
 }
 
+export interface Weather {
+  temp: number
+  condition: string
+  icon: string
+  high: number
+  low: number
+  humidity: number
+  windSpeed: number
+}
+
 export interface Day {
   id: string
   date: string
@@ -20,6 +30,7 @@ export interface Day {
   emoji: string
   summary: string
   activities: Activity[]
+  weather: Weather
 }
 
 export const HOTEL = {
@@ -37,6 +48,15 @@ export const itinerary: Day[] = [
     title: "Komudagur",
     emoji: "✈️",
     summary: "Engin dagskrá, bara koma sér fyrir",
+    weather: {
+      temp: 14,
+      condition: "Partly Cloudy",
+      icon: "⛅",
+      high: 16,
+      low: 9,
+      humidity: 65,
+      windSpeed: 15
+    },
     activities: [
       {
         id: "day1-1",
@@ -71,6 +91,15 @@ export const itinerary: Day[] = [
     title: "Broadway kvöld",
     emoji: "🎭",
     summary: "Léttur dagur – orka fyrir sýninguna",
+    weather: {
+      temp: 13,
+      condition: "Sunny",
+      icon: "☀️",
+      high: 17,
+      low: 10,
+      humidity: 55,
+      windSpeed: 12
+    },
     activities: [
       {
         id: "day2-1",
@@ -132,6 +161,15 @@ export const itinerary: Day[] = [
     title: "Downtown dagur",
     emoji: "🗽",
     summary: "Þetta passar allt á sama svæði",
+    weather: {
+      temp: 15,
+      condition: "Cloudy",
+      icon: "☁️",
+      high: 18,
+      low: 11,
+      humidity: 70,
+      windSpeed: 18
+    },
     activities: [
       {
         id: "day3-1",
@@ -181,6 +219,15 @@ export const itinerary: Day[] = [
     title: "Skemmtun + Broadway",
     emoji: "🎬",
     summary: "Bara ein rútuferð þennan dag 👍",
+    weather: {
+      temp: 16,
+      condition: "Light Rain",
+      icon: "🌧️",
+      high: 17,
+      low: 12,
+      humidity: 80,
+      windSpeed: 20
+    },
     activities: [
       {
         id: "day4-1",
@@ -226,6 +273,15 @@ export const itinerary: Day[] = [
     title: "Klassísk NYC upplifun",
     emoji: "🌆",
     summary: "Afslappaður sunnudagur",
+    weather: {
+      temp: 14,
+      condition: "Partly Cloudy",
+      icon: "⛅",
+      high: 16,
+      low: 10,
+      humidity: 60,
+      windSpeed: 14
+    },
     activities: [
       {
         id: "day5-1",
@@ -274,6 +330,15 @@ export const itinerary: Day[] = [
     title: "Heimferðardagur",
     emoji: "🏠",
     summary: "Síðasti dagurinn",
+    weather: {
+      temp: 13,
+      condition: "Sunny",
+      icon: "☀️",
+      high: 15,
+      low: 9,
+      humidity: 50,
+      windSpeed: 10
+    },
     activities: [
       {
         id: "day6-1",

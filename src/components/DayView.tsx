@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, CalendarDots } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { ActivityCard } from '@/components/ActivityCard'
+import { WeatherCard } from '@/components/WeatherCard'
 import type { Day } from '@/data/itinerary'
 
 interface DayViewProps {
@@ -52,6 +53,15 @@ export function DayView({ day, onBack }: DayViewProps) {
         </motion.header>
 
         <main className="max-w-4xl mx-auto px-6 py-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mb-6"
+          >
+            <WeatherCard weather={day.weather} />
+          </motion.div>
+
           <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarDots size={18} weight="duotone" />
             <span>{day.activities.length} activities planned</span>

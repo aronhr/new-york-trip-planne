@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Buildings, MapPin, CalendarDots } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { DayView } from '@/components/DayView'
+import { WeatherCard } from '@/components/WeatherCard'
 import { itinerary, HOTEL } from '@/data/itinerary'
 import type { Day } from '@/data/itinerary'
 
@@ -97,7 +98,7 @@ export default function App() {
                     onClick={() => setSelectedDay(day)}
                     className="w-full bg-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-200 border border-border text-left group"
                   >
-                    <div className="flex items-start gap-4">
+                    <div className="flex items-start gap-4 mb-4">
                       <div className="flex-shrink-0 text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-200">
                         {day.emoji}
                       </div>
@@ -120,6 +121,7 @@ export default function App() {
                         </div>
                       </div>
                     </div>
+                    <WeatherCard weather={day.weather} compact />
                   </button>
                 </motion.div>
               ))}
