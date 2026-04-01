@@ -40,6 +40,13 @@ This is a focused travel itinerary app with day-by-day scheduling, location deta
 - **Progression**: Tap hotel info → See address + map → Get directions if needed
 - **Success criteria**: Hotel prominently displayed, easy to find from anywhere in app
 
+### McDonald's Locator
+- **Functionality**: Floating action button (FAB) that finds the nearest McDonald's location using geolocation
+- **Purpose**: Quick access to find nearest McDonald's for convenient food options during trip
+- **Trigger**: User taps floating 🍔 button in bottom-right corner
+- **Progression**: Tap FAB → Modal opens → Geolocation detects position → Shows nearest location → Tap "Fá leiðsögn" → Opens native maps
+- **Success criteria**: FAB visible on all screens, geolocation works reliably, falls back to hotel location if permission denied, opens correct maps app (Apple/Google)
+
 ## Edge Case Handling
 - **No internet on landing**: All assets cached, full app functionality available offline
 - **Item checked by mistake**: Items can be unchecked (toggle functionality)

@@ -4,11 +4,13 @@ import { Buildings, MapPin, CalendarDots } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { DayView } from '@/components/DayView'
 import { WeatherCard } from '@/components/WeatherCard'
+import { McDonaldsLocator } from '@/components/McDonaldsLocator'
 import { itinerary, HOTEL } from '@/data/itinerary'
 import type { Day } from '@/data/itinerary'
 
 export default function App() {
   const [selectedDay, setSelectedDay] = useState<Day | null>(null)
+  const [showMcDonalds, setShowMcDonalds] = useState(false)
 
   const openMaps = (lat: number, lng: number, name: string) => {
     const encodedName = encodeURIComponent(name)
@@ -35,6 +37,22 @@ export default function App() {
           backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, oklch(0.85 0.15 85 / 0.03) 35px, oklch(0.85 0.15 85 / 0.03) 70px)`
         }} />
       </div>
+
+      <motion.button
+        onClick={() => setShowMcDonalds(true)}
+        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-accent hover:bg-accent/90 rounded-full shadow-2xl flex items-center justify-center text-4xl transition-transform hover:scale-110"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+      >
+        🍔
+      </motion.button>
+
+      <AnimatePresence>
+        {showMcDonalds && <McDonaldsLocator onClose={() => setShowMcDonalds(false)} />}
+      </AnimatePresence>
 
       <div className="relative">
         <header className="px-6 py-8 md:py-12 text-center">
