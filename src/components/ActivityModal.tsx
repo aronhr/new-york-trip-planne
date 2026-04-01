@@ -14,11 +14,17 @@ export function ActivityModal({ activity, open, onClose }: ActivityModalProps) {
     if (!activity.location) return
     
     const { lat, lng, name } = activity.location
+    const encodedName = encodeURIComponent(name)
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    const mapsUrl = isIOS
-      ? `maps://maps.apple.com/?q=${encodeURIComponent(name)}&ll=${lat},${lng}`
-      : `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
-    window.open(mapsUrl, '_blank')
+    const isMac = /Macintosh|MacIntel|MacPPC|Mac68K/.test(navigator.userAgent)
+    
+    if (isIOS || isMac) {
+      const appleMapsUrl = `http://maps.apple.com/?q=${encodedName}&ll=${lat},${lng}&z=16`
+      window.location.href = appleMapsUrl
+    } else {
+      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${encodedName}`
+      window.open(googleMapsUrl, '_blank')
+    }
   }
 
   return (
