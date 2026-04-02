@@ -1,11 +1,16 @@
 import type { Day, Activity } from '@/data/itinerary'
 
 const NYC_TIMEZONE = 'America/New_York'
+const DEFAULT_ACTIVITY_DURATION_HOURS = 2
 
 export function getNYCTime(): Date {
   const now = new Date()
   const nycString = now.toLocaleString('en-US', { timeZone: NYC_TIMEZONE })
   return new Date(nycString)
+}
+
+function formatDateToISO(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 }
 
 export function getActivityDateTime(day: Day, activity: Activity): Date {
@@ -20,22 +25,20 @@ export function isDayPast(day: Day): boolean {
   const lastActivity = day.activities[day.activities.length - 1]
   if (!lastActivity) return false
   const lastTime = getActivityDateTime(day, lastActivity)
-  lastTime.setHours(lastTime.getHours() + 2)
+  lastTime.setHours(lastTime.getHours() + DEFAULT_ACTIVITY_DURATION_HOURS)
   return now > lastTime
 }
 
 export function isDayFuture(day: Day): boolean {
   const now = getNYCTime()
   const dayDate = new Date(day.isoDate + 'T00:00:00')
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-  const today = new Date(todayStr + 'T00:00:00')
+  const today = new Date(formatDateToISO(now) + 'T00:00:00')
   return dayDate > today
 }
 
 export function isToday(day: Day): boolean {
   const now = getNYCTime()
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-  return day.isoDate === todayStr
+  return day.isoDate === formatDateToISO(now)
 }
 
 export type ActivityStatus = 'past' | 'current' | 'upcoming'
@@ -57,7 +60,7 @@ export function getActivityStatus(day: Day, activity: Activity): ActivityStatus 
   } else {
     if (now >= activityTime) {
       const endTime = new Date(activityTime)
-      endTime.setHours(endTime.getHours() + 2)
+      endTime.setHours(endTime.getHours() + DEFAULT_ACTIVITY_DURATION_HOURS)
       if (now < endTime) {
         return 'current'
       }
