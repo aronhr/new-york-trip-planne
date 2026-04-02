@@ -7,100 +7,112 @@ export interface McDonalds {
 
 export const mcdonalds: McDonalds[] = [
   {
-    name: "McDonald's - Times Square",
+    name: "McDonald's",
     address: "1528 Broadway, New York, NY 10036",
-    lat: 40.7589,
-    lng: -73.9851
+    lat: 40.75889,
+    lng: -73.98513
   },
   {
-    name: "McDonald's - Herald Square",
-    address: "1460 Broadway, New York, NY 10036",
-    lat: 40.7546,
-    lng: -73.9877
-  },
-  {
-    name: "McDonald's - 42nd Street",
+    name: "McDonald's",
     address: "220 W 42nd St, New York, NY 10036",
-    lat: 40.7565,
-    lng: -73.9887
+    lat: 40.75654,
+    lng: -73.98871
   },
   {
-    name: "McDonald's - 5th Avenue",
-    address: "10 W 34th St, New York, NY 10001",
-    lat: 40.7505,
-    lng: -73.9860
-  },
-  {
-    name: "McDonald's - Penn Station",
-    address: "460 8th Ave, New York, NY 10001",
-    lat: 40.7511,
-    lng: -73.9926
-  },
-  {
-    name: "McDonald's - Columbus Circle",
+    name: "McDonald's",
     address: "10 Columbus Cir, New York, NY 10019",
-    lat: 40.7685,
-    lng: -73.9830
+    lat: 40.76851,
+    lng: -73.98298
   },
   {
-    name: "McDonald's - Central Park South",
-    address: "160 W 56th St, New York, NY 10019",
-    lat: 40.7647,
-    lng: -73.9791
-  },
-  {
-    name: "McDonald's - 8th Avenue",
+    name: "McDonald's",
     address: "813 8th Ave, New York, NY 10019",
-    lat: 40.7628,
-    lng: -73.9857
+    lat: 40.76272,
+    lng: -73.98567
   },
   {
-    name: "McDonald's - Financial District",
+    name: "McDonald's",
+    address: "1356 Broadway, New York, NY 10018",
+    lat: 40.75336,
+    lng: -73.98778
+  },
+  {
+    name: "McDonald's",
+    address: "625 8th Ave, New York, NY 10018",
+    lat: 40.75695,
+    lng: -73.99072
+  },
+  {
+    name: "McDonald's",
+    address: "151 W 34th St, New York, NY 10001",
+    lat: 40.75073,
+    lng: -73.99093
+  },
+  {
+    name: "McDonald's",
+    address: "901 6th Ave, New York, NY 10001",
+    lat: 40.74998,
+    lng: -73.98894
+  },
+  {
+    name: "McDonald's",
+    address: "106 Fulton St, New York, NY 10038",
+    lat: 40.71093,
+    lng: -74.00661
+  },
+  {
+    name: "McDonald's",
     address: "160 Broadway, New York, NY 10038",
-    lat: 40.7093,
-    lng: -74.0100
+    lat: 40.70932,
+    lng: -74.01002
   },
   {
-    name: "McDonald's - Wall Street",
-    address: "39 Broadway, New York, NY 10006",
-    lat: 40.7069,
-    lng: -74.0131
+    name: "McDonald's",
+    address: "1691 Broadway, New York, NY 10019",
+    lat: 40.76274,
+    lng: -73.98289
   },
   {
-    name: "McDonald's - Union Square",
-    address: "7 E 14th St, New York, NY 10003",
-    lat: 40.7350,
-    lng: -73.9907
+    name: "McDonald's",
+    address: "522 5th Ave, New York, NY 10036",
+    lat: 40.75443,
+    lng: -73.98044
   },
   {
-    name: "McDonald's - East Village",
-    address: "524 6th Ave, New York, NY 10011",
-    lat: 40.7387,
-    lng: -73.9964
+    name: "McDonald's",
+    address: "2109 Broadway, New York, NY 10023",
+    lat: 40.77869,
+    lng: -73.98209
   },
   {
-    name: "McDonald's - Chelsea",
-    address: "605 8th Ave, New York, NY 10018",
-    lat: 40.7559,
-    lng: -73.9907
+    name: "McDonald's",
+    address: "1556 3rd Ave, New York, NY 10128",
+    lat: 40.77795,
+    lng: -73.95426
   },
   {
-    name: "McDonald's - Rockefeller Center",
-    address: "1371 6th Ave, New York, NY 10019",
-    lat: 40.7614,
-    lng: -73.9776
+    name: "McDonald's",
+    address: "1442 2nd Ave, New York, NY 10021",
+    lat: 40.77193,
+    lng: -73.95694
   },
   {
-    name: "McDonald's - Upper West Side",
-    address: "2129 Broadway, New York, NY 10023",
-    lat: 40.7782,
-    lng: -73.9816
+    name: "McDonald's",
+    address: "303 Park Ave S, New York, NY 10010",
+    lat: 40.74089,
+    lng: -73.98687
   },
   {
-    name: "McDonald's - Upper East Side",
-    address: "1422 3rd Ave, New York, NY 10028",
-    lat: 40.7749,
-    lng: -73.9569
+    name: "McDonald's",
+    address: "160 W 23rd St, New York, NY 10011",
+    lat: 40.74426,
+    lng: -73.99333
+  },
+  {
+    name: "McDonald's",
+    address: "252 1st Ave, New York, NY 10009",
+    lat: 40.72997,
+    lng: -73.98352
   }
 ]
 

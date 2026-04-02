@@ -4,6 +4,7 @@ import { Buildings, MapPin, CalendarDots } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { DayView } from '@/components/DayView'
 import { WeatherCard } from '@/components/WeatherCard'
+import { HourlyWeatherCard } from '@/components/HourlyWeather'
 import { McDonaldsLocator } from '@/components/McDonaldsLocator'
 import { itinerary, HOTEL } from '@/data/itinerary'
 import type { Day } from '@/data/itinerary'
@@ -99,6 +100,15 @@ export default function App() {
                 </Button>
               </div>
             </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mb-8"
+          >
+            <HourlyWeatherCard />
           </motion.div>
 
           <div className="mb-6">
