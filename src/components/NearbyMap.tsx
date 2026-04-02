@@ -121,7 +121,7 @@ export function NearbyMap({ onClose }: NearbyMapProps) {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
     const isMac = /Macintosh|MacIntel|MacPPC|Mac68K/.test(navigator.userAgent)
     if (isIOS || isMac) {
-      window.location.href = `http://maps.apple.com/?q=${encodedName}&ll=${lat},${lng}&z=16`
+      window.location.href = `https://maps.apple.com/?q=${encodedName}&ll=${lat},${lng}&z=16`
     } else {
       window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${encodedName}`, '_blank')
     }
@@ -269,9 +269,9 @@ export function NearbyMap({ onClose }: NearbyMapProps) {
                       <div className="min-w-[200px]">
                         <strong>{place.emoji} {place.name}</strong>
                         <br />
-                        <span style={{ fontSize: '12px', color: '#666' }}>{formatDistance(place.distance)} í burtu</span>
+                        <span className="text-xs text-muted-foreground">{formatDistance(place.distance)} í burtu</span>
                         <br />
-                        <span style={{ fontSize: '12px' }}>{place.description.substring(0, 100)}...</span>
+                        <span className="text-xs">{place.description.substring(0, 120)}...</span>
                       </div>
                     </Popup>
                   </Marker>
