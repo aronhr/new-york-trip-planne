@@ -34,14 +34,6 @@
   .overflow-auto {
     -webkit-overflow-scrolling: touch;
   }
-
-  /* Standalone PWA mode adjustments */
-  @media all and (display-mode: standalone) {
-    body {
-      /* Extra padding when running as PWA */
-      padding-top: env(safe-area-inset-top);
-    }
-  }
 }
 
 :root {
