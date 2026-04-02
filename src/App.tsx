@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Buildings, MapPin, CalendarDots, CaretDown, Clock, NavigationArrow, Eye } from '@phosphor-icons/react'
+import { Buildings, MapPin, CalendarDots, CaretDown, Clock, NavigationArrow, Eye, Compass } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { DayView } from '@/components/DayView'
@@ -19,9 +19,12 @@ import {
   getRelativeTime,
 } from '@/lib/timeUtils'
 
+const NearbyMap = lazy(() => import('@/components/NearbyMap').then(m => ({ default: m.NearbyMap })))
+
 export default function App() {
   const [selectedDay, setSelectedDay] = useState<Day | null>(null)
   const [showMcDonalds, setShowMcDonalds] = useState(false)
+  const [showNearbyMap, setShowNearbyMap] = useState(false)
   const [showPastDays, setShowPastDays] = useState(false)
   const [, setTick] = useState(0)
 
@@ -61,20 +64,50 @@ export default function App() {
         }} />
       </div>
 
+      {/* Floating action buttons */}
       <motion.button
-        onClick={() => setShowMcDonalds(true)}
-        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-accent hover:bg-accent/90 rounded-full shadow-2xl flex items-center justify-center text-4xl transition-transform hover:scale-110"
+        onClick={() => setShowNearbyMap(true)}
+        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-primary hover:bg-primary/90 rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+        aria-label="Opna kort"
+      >
+        <Compass size={32} weight="duotone" className="text-primary-foreground" />
+      </motion.button>
+
+      <motion.button
+        onClick={() => setShowMcDonalds(true)}
+        className="fixed bottom-6 right-24 z-40 w-14 h-14 bg-accent hover:bg-accent/90 rounded-full shadow-2xl flex items-center justify-center text-3xl transition-transform hover:scale-110"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
+        aria-label="Finna McDonald's"
       >
         🍔
       </motion.button>
 
       <AnimatePresence>
         {showMcDonalds && <McDonaldsLocator onClose={() => setShowMcDonalds(false)} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showNearbyMap && (
+          <Suspense fallback={
+            <div className="fixed inset-0 z-50 bg-background flex items-center justify-center">
+              <div className="text-center">
+                <div className="inline-block w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+                <p className="text-muted-foreground font-medium">Hleð korti...</p>
+              </div>
+            </div>
+          }>
+            <NearbyMap onClose={() => setShowNearbyMap(false)} />
+          </Suspense>
+        )}
       </AnimatePresence>
 
       <div className="relative">
