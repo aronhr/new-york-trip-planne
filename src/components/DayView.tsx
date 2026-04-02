@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, CaretDown, CheckCircle } from '@phosphor-icons/react'
+import { ArrowLeft, CaretDown, Clock, Eye } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
 import { WeatherCard } from '@/components/WeatherCard'
 import { McDonaldsLocator } from '@/components/McDonaldsLocator'
 import { ActivityCard } from '@/components/ActivityCard'
 import type { Day } from '@/data/itinerary'
+import { getActivityStatus, isToday } from '@/lib/timeUtils'
+import type { ActivityStatus } from '@/lib/timeUtils'
 
 interface DayViewProps {
   day: Day
@@ -15,39 +16,31 @@ interface DayViewProps {
 
 export function DayView({ day, onBack }: DayViewProps) {
   const [showMcDonalds, setShowMcDonalds] = useState(false)
-  const [showCompleted, setShowCompleted] = useState(false)
-  const [completedActivities, setCompletedActivities] = useState<string[]>([])
-  const [upcomingActivities, setUpcomingActivities] = useState<string[]>([])
-  const [completionRate, setCompletionRate] = useState(0)
+  const [showPast, setShowPast] = useState(false)
+  const [activityStatuses, setActivityStatuses] = useState<Record<string, ActivityStatus>>({})
 
   useEffect(() => {
-    const checkActivities = async () => {
-      const completed: string[] = []
-      const upcoming: string[] = []
-
+    const updateStatuses = () => {
+      const statuses: Record<string, ActivityStatus> = {}
       for (const activity of day.activities) {
-        const isCompleted = await window.spark.kv.get<boolean>(`activity-${activity.id}`)
-        if (isCompleted) {
-          completed.push(activity.id)
-        } else {
-          upcoming.push(activity.id)
-        }
+        statuses[activity.id] = getActivityStatus(day, activity)
       }
-
-      setCompletedActivities(completed)
-      setUpcomingActivities(upcoming)
-      
-      const rate = day.activities.length > 0 
-        ? Math.round((completed.length / day.activities.length) * 100)
-        : 0
-      setCompletionRate(rate)
+      setActivityStatuses(statuses)
     }
 
-    checkActivities()
-
-    const interval = setInterval(checkActivities, 1000)
+    updateStatuses()
+    const interval = setInterval(updateStatuses, 30000)
     return () => clearInterval(interval)
-  }, [day.activities])
+  }, [day])
+
+  const isTodayDay = isToday(day)
+
+  const pastActivities = day.activities.filter(a => activityStatuses[a.id] === 'past')
+  const currentAndUpcoming = day.activities.filter(a =>
+    activityStatuses[a.id] === 'current' || activityStatuses[a.id] === 'upcoming'
+  )
+
+  const firstUpcomingId = currentAndUpcoming.length > 0 ? currentAndUpcoming[0].id : null
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
@@ -87,94 +80,54 @@ export function DayView({ day, onBack }: DayViewProps) {
               className="mb-4 -ml-2 hover:bg-primary/10"
             >
               <ArrowLeft size={20} weight="bold" className="mr-2" />
-              Back to Overview
+              Til baka
             </Button>
             <div className="flex items-start gap-4 mb-4">
               <div className="text-5xl">{day.emoji}</div>
               <div className="flex-1">
-                <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-1">
-                  {day.title}
-                </h1>
-                <p className="text-sm text-muted-foreground mb-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+                    {day.title}
+                  </h1>
+                  {isTodayDay && (
+                    <span className="text-xs font-bold text-accent bg-accent/15 px-2.5 py-1 rounded-full">
+                      Í DAG
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">
                   {day.dayName} • {day.date}
                 </p>
-                <p className="text-sm text-foreground/80 italic">{day.summary}</p>
+                <p className="text-sm text-foreground/80 italic mt-1">{day.summary}</p>
               </div>
             </div>
             <WeatherCard weather={day.weather} />
-            
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-              className="mt-4"
-            >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium text-foreground">Daily Progress</span>
-                  <span className="text-muted-foreground">
-                    {completedActivities.length} / {day.activities.length} completed
-                  </span>
-                </div>
-                <Progress value={completionRate} className="h-3" />
-                {completionRate === 100 && (
-                  <motion.p
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-xs text-primary font-medium flex items-center gap-1"
-                  >
-                    <CheckCircle size={14} weight="fill" />
-                    All activities completed! 🎉
-                  </motion.p>
-                )}
-              </div>
-            </motion.div>
           </div>
         </motion.header>
 
         <main className="max-w-4xl mx-auto px-6 py-8">
-          {upcomingActivities.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-foreground mb-4">Activities</h2>
-              <div className="space-y-3">
-                {day.activities
-                  .filter(activity => upcomingActivities.includes(activity.id))
-                  .map((activity, index) => (
-                    <motion.div
-                      key={activity.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
-                    >
-                      <ActivityCard activity={activity} />
-                    </motion.div>
-                  ))}
-              </div>
-            </div>
-          )}
-
-          {completedActivities.length > 0 && (
-            <div className="mt-8">
+          {isTodayDay && pastActivities.length > 0 && (
+            <div className="mb-6">
               <button
-                onClick={() => setShowCompleted(!showCompleted)}
+                onClick={() => setShowPast(!showPast)}
                 className="w-full flex items-center justify-between p-4 bg-muted/50 hover:bg-muted rounded-xl transition-colors mb-4"
               >
                 <div className="flex items-center gap-3">
-                  <CheckCircle size={24} weight="fill" className="text-primary" />
-                  <h2 className="text-xl font-bold text-foreground">
-                    Completed ({completedActivities.length})
-                  </h2>
+                  <Eye size={24} weight="duotone" className="text-muted-foreground" />
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {pastActivities.length} {pastActivities.length === 1 ? 'liðinn hlutur' : 'liðnir hlutir'}
+                  </span>
                 </div>
                 <motion.div
-                  animate={{ rotate: showCompleted ? 180 : 0 }}
+                  animate={{ rotate: showPast ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <CaretDown size={24} weight="bold" className="text-muted-foreground" />
+                  <CaretDown size={20} weight="bold" className="text-muted-foreground" />
                 </motion.div>
               </button>
 
               <AnimatePresence>
-                {showCompleted && (
+                {showPast && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
@@ -182,25 +135,82 @@ export function DayView({ day, onBack }: DayViewProps) {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <div className="space-y-3">
-                      {day.activities
-                        .filter(activity => completedActivities.includes(activity.id))
-                        .map((activity, index) => (
-                          <motion.div
-                            key={activity.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
-                          >
-                            <ActivityCard activity={activity} />
-                          </motion.div>
-                        ))}
+                    <div className="space-y-3 mb-6">
+                      {pastActivities.map((activity, index) => (
+                        <motion.div
+                          key={activity.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.2, delay: index * 0.03 }}
+                        >
+                          <ActivityCard
+                            activity={activity}
+                            day={day}
+                            status="past"
+                          />
+                        </motion.div>
+                      ))}
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
           )}
+
+          {currentAndUpcoming.length > 0 && (
+            <div>
+              {isTodayDay && (
+                <div className="flex items-center gap-2 mb-4">
+                  <Clock size={20} weight="duotone" className="text-accent" />
+                  <h2 className="text-lg font-bold text-foreground">Dagskrá</h2>
+                </div>
+              )}
+              <div className="space-y-3">
+                {currentAndUpcoming.map((activity, index) => (
+                  <motion.div
+                    key={activity.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                  >
+                    <ActivityCard
+                      activity={activity}
+                      day={day}
+                      status={activityStatuses[activity.id] || 'upcoming'}
+                      isNext={activity.id === firstUpcomingId}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!isTodayDay && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Clock size={20} weight="duotone" className="text-primary" />
+                <h2 className="text-lg font-bold text-foreground">Tímalína</h2>
+              </div>
+              <div className="space-y-3">
+                {day.activities.map((activity, index) => (
+                  <motion.div
+                    key={activity.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                  >
+                    <ActivityCard
+                      activity={activity}
+                      day={day}
+                      status="upcoming"
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="h-24" />
         </main>
       </div>
     </div>

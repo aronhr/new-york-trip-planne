@@ -1,6 +1,6 @@
 export interface Activity {
   id: string
-  time?: string
+  time: string
   title: string
   description?: string
   location?: {
@@ -25,6 +25,7 @@ export interface Weather {
 export interface Day {
   id: string
   date: string
+  isoDate: string
   dayName: string
   title: string
   emoji: string
@@ -44,6 +45,7 @@ export const itinerary: Day[] = [
   {
     id: "day1",
     date: "April 1",
+    isoDate: "2026-04-01",
     dayName: "Miðvikudagur",
     title: "Komudagur",
     emoji: "✈️",
@@ -73,6 +75,7 @@ export const itinerary: Day[] = [
       },
       {
         id: "day1-3",
+        time: "22:00",
         title: "Létt kvöldmatur nálægt hótelinu + Time Square rölt",
         description: "Finna sér eitthvað gott að borða nálægt hótelinu og taka fyrstu skrefin í NYC! Times Square er í göngufæri.",
         location: {
@@ -87,6 +90,7 @@ export const itinerary: Day[] = [
   {
     id: "day2",
     date: "April 2",
+    isoDate: "2026-04-02",
     dayName: "Fimmtudagur",
     title: "Broadway kvöld",
     emoji: "🎭",
@@ -103,11 +107,13 @@ export const itinerary: Day[] = [
     activities: [
       {
         id: "day2-1",
+        time: "09:00",
         title: "Morgunkaffi + róleg ganga",
         description: "Byrjið daginn rólega með góðu kaffi og léttu morgunverði."
       },
       {
         id: "day2-2",
+        time: "10:30",
         title: "Central Park",
         description: "Stutt rölt eða láta hjóla með okkur í 1 klst? Njótið fallegra útsýna og náttúrunnar í hjarta borgarinnar.",
         location: {
@@ -119,6 +125,7 @@ export const itinerary: Day[] = [
       },
       {
         id: "day2-3",
+        time: "13:00",
         title: "Búðarrölt (Fifth Ave / Times Square)",
         description: "Frjáls tími til að skoða búðir á Fifth Avenue og Times Square svæðinu.",
         location: {
@@ -157,6 +164,7 @@ export const itinerary: Day[] = [
   {
     id: "day3",
     date: "April 3",
+    isoDate: "2026-04-03",
     dayName: "Föstudagur",
     title: "Downtown dagur",
     emoji: "🗽",
@@ -173,6 +181,7 @@ export const itinerary: Day[] = [
     activities: [
       {
         id: "day3-1",
+        time: "09:00",
         title: "Hop on Hop off (Downtown leið)",
         description: "Farið í Hop on Hop off rútuna og skoðið Downtown Manhattan.",
         notes: "Þetta passar allt á sama svæði"
@@ -191,6 +200,7 @@ export const itinerary: Day[] = [
       },
       {
         id: "day3-3",
+        time: "15:30",
         title: "Frelsistyttan / Century 21",
         description: "Skoða Frelsistyttuna (úr fjarska eða fara nær ef tími gefst) og Century 21 fyrir góð tilboð.",
         location: {
@@ -202,11 +212,13 @@ export const itinerary: Day[] = [
       },
       {
         id: "day3-4",
+        time: "18:00",
         title: "Skyndibiti í kvöldmatinn",
         description: "Finna sér skyndibita í Downtown svæðinu."
       },
       {
         id: "day3-5",
+        time: "20:00",
         title: "Rólegt kvöld",
         description: "Taka það rólega og hvíla sig eftir langan dag."
       }
@@ -215,6 +227,7 @@ export const itinerary: Day[] = [
   {
     id: "day4",
     date: "April 4",
+    isoDate: "2026-04-04",
     dayName: "Laugardagur",
     title: "Skemmtun + Broadway",
     emoji: "🎬",
@@ -231,18 +244,20 @@ export const itinerary: Day[] = [
     activities: [
       {
         id: "day4-1",
+        time: "08:00",
         title: "Morgunn rólegur (sofa út / kaffi)",
         description: "Sofið ykkur út og njótið rólega morguns með góðu kaffi."
       },
       {
         id: "day4-2",
-        time: "9:00-12:00",
+        time: "09:00",
         title: "NYC TV & Movie Bus Tour",
         description: "Rútuferð um fræga kvikmyndatökustaði í NYC. EFTIR AÐ PANTA!",
         notes: "Muna að panta þessa ferð"
       },
       {
         id: "day4-3",
+        time: "13:00",
         title: "Frjáls tími / hvíld",
         description: "Hvílið ykkur og náið ykkur eftir rútuferðina og fyrir kvöldið."
       },
@@ -269,6 +284,7 @@ export const itinerary: Day[] = [
   {
     id: "day5",
     date: "April 5",
+    isoDate: "2026-04-05",
     dayName: "Sunnudagur",
     title: "Klassísk NYC upplifun",
     emoji: "🌆",
@@ -285,16 +301,19 @@ export const itinerary: Day[] = [
     activities: [
       {
         id: "day5-1",
+        time: "09:00",
         title: "Hop on Hop off (Midtown / Uptown)",
         description: "Skoðið Midtown og Uptown á Hop on Hop off rútunni."
       },
       {
         id: "day5-2",
+        time: "12:00",
         title: "Frjáls tími",
         description: "Frjáls tími til að skoða hvað ykkur langar."
       },
       {
         id: "day5-3",
+        time: "14:00",
         title: "High Line",
         description: "Róleg ganga eftir High Line - falleg upphækkuð garðgata með útsýni yfir borgina.",
         location: {
@@ -306,6 +325,7 @@ export const itinerary: Day[] = [
       },
       {
         id: "day5-4",
+        time: "16:30",
         title: "Edge við sólsetur",
         description: "Observation deck með ótrúlegu útsýni! EFTIR AÐ PANTA.",
         location: {
@@ -318,6 +338,7 @@ export const itinerary: Day[] = [
       },
       {
         id: "day5-5",
+        time: "19:00",
         title: "Kvöldrölt / skyndibiti",
         description: "Síðasta kvöld í NYC - njótið stemningarinnar!"
       }
@@ -326,6 +347,7 @@ export const itinerary: Day[] = [
   {
     id: "day6",
     date: "April 6",
+    isoDate: "2026-04-06",
     dayName: "Mánudagur",
     title: "Heimferðardagur",
     emoji: "🏠",
@@ -342,11 +364,13 @@ export const itinerary: Day[] = [
     activities: [
       {
         id: "day6-1",
+        time: "08:00",
         title: "Morgunkaffi + síðasta rölt",
         description: "Njótið síðasta morgunsins í NYC með kaffi og léttri göngu."
       },
       {
         id: "day6-2",
+        time: "10:00",
         title: "Vaxmyndasafnið",
         description: "Heimsókn á Madame Tussauds vaxmyndasafnið.",
         location: {
@@ -358,11 +382,13 @@ export const itinerary: Day[] = [
       },
       {
         id: "day6-3",
+        time: "13:00",
         title: "Sækja töskur",
         description: "Check out úr hótelinu og sækja farangur."
       },
       {
         id: "day6-4",
+        time: "15:00",
         title: "Halda á flugvöll",
         description: "Farið í tæka tíð á flugvöllinn fyrir heimferðina."
       },
