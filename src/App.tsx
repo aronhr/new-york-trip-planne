@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Buildings, MapPin, CalendarDots } from '@phosphor-icons/react'
+import { Buildings, MapPin, CalendarDots, CheckCircle, CaretDown } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { DayView } from '@/components/DayView'
 import { WeatherCard } from '@/components/WeatherCard'
@@ -12,6 +12,42 @@ import type { Day } from '@/data/itinerary'
 export default function App() {
   const [selectedDay, setSelectedDay] = useState<Day | null>(null)
   const [showMcDonalds, setShowMcDonalds] = useState(false)
+  const [showCompleted, setShowCompleted] = useState(false)
+  const [completedDays, setCompletedDays] = useState<string[]>([])
+  const [upcomingDays, setUpcomingDays] = useState<string[]>([])
+
+  useEffect(() => {
+    const checkDays = async () => {
+      const completed: string[] = []
+      const upcoming: string[] = []
+
+      for (const day of itinerary) {
+        let allActivitiesCompleted = true
+        
+        for (const activity of day.activities) {
+          const isCompleted = await window.spark.kv.get<boolean>(`activity-${activity.id}`)
+          if (!isCompleted) {
+            allActivitiesCompleted = false
+            break
+          }
+        }
+
+        if (allActivitiesCompleted && day.activities.length > 0) {
+          completed.push(day.id)
+        } else {
+          upcoming.push(day.id)
+        }
+      }
+
+      setCompletedDays(completed)
+      setUpcomingDays(upcoming)
+    }
+
+    checkDays()
+
+    const interval = setInterval(checkDays, 2000)
+    return () => clearInterval(interval)
+  }, [])
 
   const openMaps = (lat: number, lng: number, name: string) => {
     const encodedName = encodeURIComponent(name)
@@ -111,56 +147,141 @@ export default function App() {
             <HourlyWeatherCard />
           </motion.div>
 
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2 mb-4">
-              <CalendarDots size={28} weight="duotone" className="text-primary" />
-              Your Itinerary
-            </h2>
-          </div>
+          {upcomingDays.length > 0 && (
+            <>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-foreground flex items-center gap-2 mb-4">
+                  <CalendarDots size={28} weight="duotone" className="text-primary" />
+                  Næsta dagskrá
+                </h2>
+              </div>
 
-          <div className="grid gap-4">
-            <AnimatePresence>
-              {itinerary.map((day, index) => (
+              <div className="grid gap-4">
+                <AnimatePresence>
+                  {itinerary
+                    .filter(day => upcomingDays.includes(day.id))
+                    .map((day, index) => (
+                      <motion.div
+                        key={day.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                        whileHover={{ y: -4, transition: { duration: 0.15 } }}
+                      >
+                        <button
+                          onClick={() => setSelectedDay(day)}
+                          className="w-full bg-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-200 border border-border text-left group"
+                        >
+                          <div className="flex items-start gap-4 mb-4">
+                            <div className="flex-shrink-0 text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-200">
+                              {day.emoji}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-baseline gap-2 mb-1 flex-wrap">
+                                <h3 className="text-xl md:text-2xl font-bold text-foreground">
+                                  {day.title}
+                                </h3>
+                                <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
+                                  {day.dayName}
+                                </span>
+                              </div>
+                              <p className="text-sm text-muted-foreground mb-2">{day.date}</p>
+                              <p className="text-sm text-foreground/80 italic">{day.summary}</p>
+                              <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                  <CalendarDots size={14} weight="duotone" />
+                                  {day.activities.length} activities
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <WeatherCard weather={day.weather} compact />
+                        </button>
+                      </motion.div>
+                    ))}
+                </AnimatePresence>
+              </div>
+            </>
+          )}
+
+          {completedDays.length > 0 && (
+            <div className="mt-8">
+              <button
+                onClick={() => setShowCompleted(!showCompleted)}
+                className="w-full flex items-center justify-between p-4 bg-muted/50 hover:bg-muted rounded-xl transition-colors mb-4"
+              >
+                <div className="flex items-center gap-3">
+                  <CheckCircle size={24} weight="fill" className="text-primary" />
+                  <h2 className="text-xl font-bold text-foreground">
+                    Liðin dagskrá ({completedDays.length})
+                  </h2>
+                </div>
                 <motion.div
-                  key={day.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                  whileHover={{ y: -4, transition: { duration: 0.15 } }}
+                  animate={{ rotate: showCompleted ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <button
-                    onClick={() => setSelectedDay(day)}
-                    className="w-full bg-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-200 border border-border text-left group"
-                  >
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className="flex-shrink-0 text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-200">
-                        {day.emoji}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline gap-2 mb-1 flex-wrap">
-                          <h3 className="text-xl md:text-2xl font-bold text-foreground">
-                            {day.title}
-                          </h3>
-                          <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
-                            {day.dayName}
-                          </span>
-                        </div>
-                        <p className="text-sm text-muted-foreground mb-2">{day.date}</p>
-                        <p className="text-sm text-foreground/80 italic">{day.summary}</p>
-                        <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <CalendarDots size={14} weight="duotone" />
-                            {day.activities.length} activities
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <WeatherCard weather={day.weather} compact />
-                  </button>
+                  <CaretDown size={24} weight="bold" className="text-muted-foreground" />
                 </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+              </button>
+
+              <AnimatePresence>
+                {showCompleted && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="grid gap-4">
+                      {itinerary
+                        .filter(day => completedDays.includes(day.id))
+                        .map((day, index) => (
+                          <motion.div
+                            key={day.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                            whileHover={{ y: -4, transition: { duration: 0.15 } }}
+                          >
+                            <button
+                              onClick={() => setSelectedDay(day)}
+                              className="w-full bg-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-200 border border-border text-left group opacity-75"
+                            >
+                              <div className="flex items-start gap-4 mb-4">
+                                <div className="flex-shrink-0 text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-200">
+                                  {day.emoji}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-baseline gap-2 mb-1 flex-wrap">
+                                    <h3 className="text-xl md:text-2xl font-bold text-foreground">
+                                      {day.title}
+                                    </h3>
+                                    <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
+                                      {day.dayName}
+                                    </span>
+                                    <CheckCircle size={20} weight="fill" className="text-primary" />
+                                  </div>
+                                  <p className="text-sm text-muted-foreground mb-2">{day.date}</p>
+                                  <p className="text-sm text-foreground/80 italic">{day.summary}</p>
+                                  <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                                    <span className="flex items-center gap-1">
+                                      <CalendarDots size={14} weight="duotone" />
+                                      {day.activities.length} activities
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <WeatherCard weather={day.weather} compact />
+                            </button>
+                          </motion.div>
+                        ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
           <motion.div
             initial={{ opacity: 0 }}
