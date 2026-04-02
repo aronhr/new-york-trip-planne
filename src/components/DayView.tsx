@@ -43,7 +43,7 @@ export function DayView({ day, onBack }: DayViewProps) {
   const firstUpcomingId = currentAndUpcoming.length > 0 ? currentAndUpcoming[0].id : null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
+    <div className="min-h-screen pt-4 bg-gradient-to-br from-background via-background to-muted">
       <div className="absolute inset-0 opacity-30 pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, oklch(0.85 0.15 85 / 0.03) 35px, oklch(0.85 0.15 85 / 0.03) 70px)`
