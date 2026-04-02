@@ -14,6 +14,7 @@ export interface Activity {
 
 export interface Weather {
   temp: number
+  feelsLike: number
   condition: string
   icon: string
   high: number
@@ -52,6 +53,7 @@ export const itinerary: Day[] = [
     summary: "Engin dagskrá, bara koma sér fyrir",
     weather: {
       temp: 14,
+      feelsLike: 12,
       condition: "Partly Cloudy",
       icon: "⛅",
       high: 16,
@@ -97,6 +99,7 @@ export const itinerary: Day[] = [
     summary: "Léttur dagur – orka fyrir sýninguna",
     weather: {
       temp: 13,
+      feelsLike: 11,
       condition: "Sunny",
       icon: "☀️",
       high: 17,
@@ -171,6 +174,7 @@ export const itinerary: Day[] = [
     summary: "Þetta passar allt á sama svæði",
     weather: {
       temp: 15,
+      feelsLike: 12,
       condition: "Cloudy",
       icon: "☁️",
       high: 18,
@@ -234,6 +238,7 @@ export const itinerary: Day[] = [
     summary: "Bara ein rútuferð þennan dag 👍",
     weather: {
       temp: 16,
+      feelsLike: 13,
       condition: "Light Rain",
       icon: "🌧️",
       high: 17,
@@ -291,6 +296,7 @@ export const itinerary: Day[] = [
     summary: "Afslappaður sunnudagur",
     weather: {
       temp: 14,
+      feelsLike: 12,
       condition: "Partly Cloudy",
       icon: "⛅",
       high: 16,
@@ -354,6 +360,7 @@ export const itinerary: Day[] = [
     summary: "Síðasti dagurinn",
     weather: {
       temp: 13,
+      feelsLike: 12,
       condition: "Sunny",
       icon: "☀️",
       high: 15,
