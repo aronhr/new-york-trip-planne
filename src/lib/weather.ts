@@ -10,6 +10,7 @@ export interface HourlyWeather {
 
 export interface DailyWeather {
   temp: number
+  feelsLike: number
   condition: string
   icon: string
   high: number
@@ -55,7 +56,7 @@ function getWeatherCondition(code: number): string {
 export async function fetchLiveWeather(): Promise<DailyWeather | null> {
   try {
     const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${NYC_LAT}&longitude=${NYC_LNG}&hourly=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&temperature_unit=celsius&wind_speed_unit=kmh&timezone=America%2FNew_York&forecast_days=1`
+      `https://api.open-meteo.com/v1/forecast?latitude=${NYC_LAT}&longitude=${NYC_LNG}&hourly=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&temperature_unit=celsius&wind_speed_unit=kmh&timezone=America%2FNew_York&forecast_days=1`
     )
 
     if (!response.ok) {
@@ -93,12 +94,14 @@ export async function fetchLiveWeather(): Promise<DailyWeather | null> {
     }
     
     const currentTemp = Math.round(data.hourly.temperature_2m[currentHour])
+    const currentFeelsLike = Math.round(data.hourly.apparent_temperature[currentHour])
     const currentCode = data.hourly.weather_code[currentHour]
     const currentHumidity = data.hourly.relative_humidity_2m[currentHour]
     const currentWindSpeed = Math.round(data.hourly.wind_speed_10m[currentHour])
     
     return {
       temp: currentTemp,
+      feelsLike: currentFeelsLike,
       condition: getWeatherCondition(currentCode),
       icon: getWeatherIcon(currentCode, currentHour >= 6 && currentHour <= 18),
       high: Math.round(data.daily.temperature_2m_max[0]),

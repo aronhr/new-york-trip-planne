@@ -1,4 +1,4 @@
-import { Thermometer, Drop, Wind } from '@phosphor-icons/react'
+import { Thermometer, Drop, Wind, ThermometerSimple } from '@phosphor-icons/react'
 import { Card } from '@/components/ui/card'
 import type { Weather } from '@/data/itinerary'
 
@@ -33,14 +33,18 @@ export function WeatherCard({ weather, compact = false }: WeatherCardProps) {
           </div>
           <p className="text-base font-medium text-foreground mb-3">{weather.condition}</p>
           
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <ThermometerSimple size={16} weight="fill" className="text-sky-blue" />
+              <span>Feels {weather.feelsLike}°</span>
+            </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Drop size={16} weight="fill" className="text-sky-blue" />
-              <span>{weather.humidity}% humidity</span>
+              <span>{weather.humidity}%</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Wind size={16} weight="fill" className="text-sky-blue" />
-              <span>{weather.windSpeed} km/h wind</span>
+              <span>{weather.windSpeed} km/h</span>
             </div>
           </div>
         </div>
