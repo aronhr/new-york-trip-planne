@@ -1,4 +1,66 @@
 <svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="192" height="192" rx="48" fill="#f5d547"/>
-  <text x="96" y="135" font-size="100" text-anchor="middle" dominant-baseline="middle">🗽</text>
+  <defs>
+    <linearGradient id="bg192" x1="0" y1="0" x2="192" y2="192">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <linearGradient id="sky192" x1="96" y1="0" x2="96" y2="130">
+      <stop offset="0%" stop-color="#0f3460"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="40" fill="url(#bg192)"/>
+  <!-- Stars -->
+  <circle cx="30" cy="25" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="55" cy="15" r="1" fill="#fff" opacity="0.6"/>
+  <circle cx="140" cy="20" r="1.5" fill="#fff" opacity="0.7"/>
+  <circle cx="165" cy="35" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="80" cy="30" r="1" fill="#fff" opacity="0.6"/>
+  <!-- NYC Skyline -->
+  <!-- Empire State Building -->
+  <rect x="85" y="50" width="22" height="95" rx="1" fill="#e2e8f0"/>
+  <rect x="91" y="35" width="10" height="20" rx="1" fill="#cbd5e1"/>
+  <rect x="94" y="20" width="4" height="18" fill="#f5d547"/>
+  <circle cx="96" cy="18" r="3" fill="#f5d547" opacity="0.9"/>
+  <!-- Building windows -->
+  <rect x="89" y="55" width="3" height="4" rx="0.5" fill="#f5d547" opacity="0.7"/>
+  <rect x="95" y="55" width="3" height="4" rx="0.5" fill="#fbbf24" opacity="0.6"/>
+  <rect x="101" y="55" width="3" height="4" rx="0.5" fill="#f5d547" opacity="0.8"/>
+  <rect x="89" y="65" width="3" height="4" rx="0.5" fill="#fbbf24" opacity="0.5"/>
+  <rect x="95" y="65" width="3" height="4" rx="0.5" fill="#f5d547" opacity="0.7"/>
+  <rect x="101" y="65" width="3" height="4" rx="0.5" fill="#fbbf24" opacity="0.6"/>
+  <rect x="89" y="75" width="3" height="4" rx="0.5" fill="#f5d547" opacity="0.6"/>
+  <rect x="95" y="75" width="3" height="4" rx="0.5" fill="#fbbf24" opacity="0.8"/>
+  <rect x="101" y="75" width="3" height="4" rx="0.5" fill="#f5d547" opacity="0.5"/>
+  <rect x="89" y="85" width="3" height="4" rx="0.5" fill="#fbbf24" opacity="0.7"/>
+  <rect x="95" y="85" width="3" height="4" rx="0.5" fill="#f5d547" opacity="0.6"/>
+  <rect x="101" y="85" width="3" height="4" rx="0.5" fill="#fbbf24" opacity="0.5"/>
+  <!-- Left buildings -->
+  <rect x="25" y="90" width="18" height="55" rx="1" fill="#94a3b8"/>
+  <rect x="47" y="75" width="16" height="70" rx="1" fill="#a1a1aa"/>
+  <rect x="66" y="85" width="16" height="60" rx="1" fill="#9ca3af"/>
+  <!-- Right buildings -->
+  <rect x="110" y="80" width="16" height="65" rx="1" fill="#9ca3af"/>
+  <rect x="130" y="70" width="18" height="75" rx="1" fill="#a1a1aa"/>
+  <rect x="152" y="88" width="16" height="57" rx="1" fill="#94a3b8"/>
+  <!-- Left building windows -->
+  <rect x="29" y="95" width="2.5" height="3" rx="0.5" fill="#f5d547" opacity="0.6"/>
+  <rect x="34" y="95" width="2.5" height="3" rx="0.5" fill="#fbbf24" opacity="0.5"/>
+  <rect x="29" y="103" width="2.5" height="3" rx="0.5" fill="#fbbf24" opacity="0.7"/>
+  <rect x="34" y="103" width="2.5" height="3" rx="0.5" fill="#f5d547" opacity="0.4"/>
+  <rect x="51" y="80" width="2.5" height="3" rx="0.5" fill="#f5d547" opacity="0.5"/>
+  <rect x="56" y="80" width="2.5" height="3" rx="0.5" fill="#fbbf24" opacity="0.7"/>
+  <rect x="51" y="88" width="2.5" height="3" rx="0.5" fill="#fbbf24" opacity="0.4"/>
+  <rect x="56" y="88" width="2.5" height="3" rx="0.5" fill="#f5d547" opacity="0.6"/>
+  <!-- Right building windows -->
+  <rect x="114" y="85" width="2.5" height="3" rx="0.5" fill="#f5d547" opacity="0.6"/>
+  <rect x="119" y="85" width="2.5" height="3" rx="0.5" fill="#fbbf24" opacity="0.5"/>
+  <rect x="134" y="75" width="2.5" height="3" rx="0.5" fill="#fbbf24" opacity="0.7"/>
+  <rect x="140" y="75" width="2.5" height="3" rx="0.5" fill="#f5d547" opacity="0.4"/>
+  <rect x="134" y="83" width="2.5" height="3" rx="0.5" fill="#f5d547" opacity="0.5"/>
+  <rect x="140" y="83" width="2.5" height="3" rx="0.5" fill="#fbbf24" opacity="0.6"/>
+  <!-- Ground / base -->
+  <rect x="0" y="145" width="192" height="47" rx="0" fill="#1e293b"/>
+  <!-- NYC Text -->
+  <text x="96" y="170" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="bold" fill="#f5d547" text-anchor="middle" letter-spacing="6">NYC</text>
 </svg>

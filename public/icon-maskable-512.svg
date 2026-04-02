@@ -1,0 +1,50 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Maskable icon with safe zone padding (approx 20% inset) -->
+  <rect width="512" height="512" fill="#1a1a2e"/>
+  <!-- Stars -->
+  <circle cx="120" cy="100" r="3" fill="#fff" opacity="0.8"/>
+  <circle cx="200" cy="75" r="2.5" fill="#fff" opacity="0.6"/>
+  <circle cx="380" cy="90" r="3" fill="#fff" opacity="0.7"/>
+  <circle cx="420" cy="120" r="2.5" fill="#fff" opacity="0.5"/>
+  <circle cx="260" cy="85" r="2.5" fill="#fff" opacity="0.6"/>
+  <!-- NYC Skyline (centered in safe zone) -->
+  <!-- Empire State Building -->
+  <rect x="226" y="140" width="60" height="210" rx="2" fill="#e2e8f0"/>
+  <rect x="242" y="105" width="28" height="45" rx="2" fill="#cbd5e1"/>
+  <rect x="251" y="70" width="10" height="42" fill="#f5d547"/>
+  <circle cx="256" cy="66" r="7" fill="#f5d547" opacity="0.9"/>
+  <!-- Windows -->
+  <rect x="234" y="150" width="8" height="10" rx="1" fill="#f5d547" opacity="0.7"/>
+  <rect x="252" y="150" width="8" height="10" rx="1" fill="#fbbf24" opacity="0.6"/>
+  <rect x="270" y="150" width="8" height="10" rx="1" fill="#f5d547" opacity="0.8"/>
+  <rect x="234" y="175" width="8" height="10" rx="1" fill="#fbbf24" opacity="0.5"/>
+  <rect x="252" y="175" width="8" height="10" rx="1" fill="#f5d547" opacity="0.7"/>
+  <rect x="270" y="175" width="8" height="10" rx="1" fill="#fbbf24" opacity="0.6"/>
+  <rect x="234" y="200" width="8" height="10" rx="1" fill="#f5d547" opacity="0.6"/>
+  <rect x="252" y="200" width="8" height="10" rx="1" fill="#fbbf24" opacity="0.8"/>
+  <rect x="270" y="200" width="8" height="10" rx="1" fill="#f5d547" opacity="0.5"/>
+  <rect x="234" y="225" width="8" height="10" rx="1" fill="#fbbf24" opacity="0.7"/>
+  <rect x="252" y="225" width="8" height="10" rx="1" fill="#f5d547" opacity="0.6"/>
+  <rect x="270" y="225" width="8" height="10" rx="1" fill="#fbbf24" opacity="0.5"/>
+  <!-- Left buildings -->
+  <rect x="90" y="240" width="48" height="110" rx="2" fill="#94a3b8"/>
+  <rect x="100" y="250" width="7" height="8" rx="1" fill="#f5d547" opacity="0.6"/>
+  <rect x="116" y="250" width="7" height="8" rx="1" fill="#fbbf24" opacity="0.5"/>
+  <rect x="148" y="210" width="42" height="140" rx="2" fill="#a1a1aa"/>
+  <rect x="158" y="220" width="7" height="8" rx="1" fill="#f5d547" opacity="0.5"/>
+  <rect x="172" y="220" width="7" height="8" rx="1" fill="#fbbf24" opacity="0.7"/>
+  <rect x="198" y="230" width="22" height="120" rx="2" fill="#9ca3af"/>
+  <!-- Right buildings -->
+  <rect x="294" y="225" width="22" height="125" rx="2" fill="#9ca3af"/>
+  <rect x="324" y="200" width="42" height="150" rx="2" fill="#a1a1aa"/>
+  <rect x="334" y="210" width="7" height="8" rx="1" fill="#fbbf24" opacity="0.7"/>
+  <rect x="348" y="210" width="7" height="8" rx="1" fill="#f5d547" opacity="0.4"/>
+  <rect x="374" y="240" width="48" height="110" rx="2" fill="#94a3b8"/>
+  <rect x="384" y="250" width="7" height="8" rx="1" fill="#f5d547" opacity="0.6"/>
+  <rect x="400" y="250" width="7" height="8" rx="1" fill="#fbbf24" opacity="0.5"/>
+  <!-- Ground -->
+  <rect x="0" y="350" width="512" height="162" fill="#1e293b"/>
+  <!-- NYC Text -->
+  <text x="256" y="420" font-family="Arial,Helvetica,sans-serif" font-size="58" font-weight="bold" fill="#f5d547" text-anchor="middle" letter-spacing="14">NYC</text>
+  <text x="256" y="450" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="4">APRIL 2026</text>
+</svg>
