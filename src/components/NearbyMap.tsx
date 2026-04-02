@@ -221,7 +221,7 @@ export function NearbyMap({ onClose }: NearbyMapProps) {
         ) : (
           <>
             {/* Map */}
-            <div className="h-[55vh] md:h-[60vh] relative z-0">
+            <div className="mx-4 my-2 rounded-xl overflow-hidden shadow-md h-[55vh] md:h-[60vh] relative z-0">
               <MapContainer
                 center={mapCenter}
                 zoom={mapZoom}
