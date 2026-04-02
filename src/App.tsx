@@ -1,65 +1,51 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Buildings, MapPin, CalendarDots, CheckCircle, CaretDown } from '@phosphor-icons/react'
+import { Buildings, MapPin, CalendarDots, CaretDown, Clock, NavigationArrow, Eye } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { DayView } from '@/components/DayView'
 import { WeatherCard } from '@/components/WeatherCard'
 import { HourlyWeatherCard } from '@/components/HourlyWeather'
 import { McDonaldsLocator } from '@/components/McDonaldsLocator'
 import { itinerary, HOTEL } from '@/data/itinerary'
 import type { Day } from '@/data/itinerary'
+import {
+  getNextActivity,
+  getCurrentDay,
+  isDayPast,
+  isDayFuture,
+  isToday,
+  formatTimeDisplay,
+  getRelativeTime,
+} from '@/lib/timeUtils'
 
 export default function App() {
   const [selectedDay, setSelectedDay] = useState<Day | null>(null)
   const [showMcDonalds, setShowMcDonalds] = useState(false)
-  const [showCompleted, setShowCompleted] = useState(false)
-  const [completedDays, setCompletedDays] = useState<string[]>([])
-  const [upcomingDays, setUpcomingDays] = useState<string[]>([])
+  const [showPastDays, setShowPastDays] = useState(false)
+  const [, setTick] = useState(0)
 
   useEffect(() => {
-    const checkDays = async () => {
-      const completed: string[] = []
-      const upcoming: string[] = []
-
-      for (const day of itinerary) {
-        let allActivitiesCompleted = true
-        
-        for (const activity of day.activities) {
-          const isCompleted = await window.spark.kv.get<boolean>(`activity-${activity.id}`)
-          if (!isCompleted) {
-            allActivitiesCompleted = false
-            break
-          }
-        }
-
-        if (allActivitiesCompleted && day.activities.length > 0) {
-          completed.push(day.id)
-        } else {
-          upcoming.push(day.id)
-        }
-      }
-
-      setCompletedDays(completed)
-      setUpcomingDays(upcoming)
-    }
-
-    checkDays()
-
-    const interval = setInterval(checkDays, 2000)
+    const interval = setInterval(() => setTick(t => t + 1), 30000)
     return () => clearInterval(interval)
   }, [])
+
+  const nextUp = getNextActivity(itinerary)
+  const todayDay = getCurrentDay(itinerary)
+
+  const pastDays = itinerary.filter(day => isDayPast(day))
+  const futureDays = itinerary.filter(day => isDayFuture(day) && !isToday(day))
+  const activeDays = todayDay ? [todayDay, ...futureDays] : futureDays
 
   const openMaps = (lat: number, lng: number, name: string) => {
     const encodedName = encodeURIComponent(name)
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
     const isMac = /Macintosh|MacIntel|MacPPC|Mac68K/.test(navigator.userAgent)
-    
+
     if (isIOS || isMac) {
-      const appleMapsUrl = `http://maps.apple.com/?q=${encodedName}&ll=${lat},${lng}&z=16`
-      window.location.href = appleMapsUrl
+      window.location.href = `http://maps.apple.com/?q=${encodedName}&ll=${lat},${lng}&z=16`
     } else {
-      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${encodedName}`
-      window.open(googleMapsUrl, '_blank')
+      window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${encodedName}`, '_blank')
     }
   }
 
@@ -111,6 +97,73 @@ export default function App() {
         </header>
 
         <div className="max-w-4xl mx-auto px-6 pb-12">
+          {nextUp && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="mb-8"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-flex items-center gap-1.5 text-sm font-bold text-accent">
+                  <span className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse" />
+                  NÆST
+                </span>
+              </div>
+              <Card
+                className="p-6 border-l-4 border-l-accent bg-accent/5 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
+                onClick={() => setSelectedDay(nextUp.day)}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 flex flex-col items-center">
+                    <div className="w-14 h-14 rounded-2xl bg-accent text-accent-foreground flex items-center justify-center text-lg font-bold">
+                      {formatTimeDisplay(nextUp.activity.time).split(' ')[0]}
+                    </div>
+                    <span className="text-xs font-medium text-accent mt-1">
+                      {formatTimeDisplay(nextUp.activity.time).split(' ')[1]}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl font-bold text-foreground mb-1">
+                      {nextUp.activity.title}
+                    </h3>
+                    <div className="flex items-center gap-1.5 text-sm text-accent font-medium mb-2">
+                      <Clock size={14} weight="duotone" />
+                      <span>{getRelativeTime(nextUp.day, nextUp.activity)}</span>
+                    </div>
+                    {nextUp.activity.location && (
+                      <div className="flex items-center gap-1.5 text-sm text-secondary">
+                        <MapPin size={14} weight="fill" />
+                        <span>{nextUp.activity.location.name}</span>
+                      </div>
+                    )}
+                    {nextUp.activity.description && (
+                      <p className="text-sm text-foreground/70 mt-2 line-clamp-2">
+                        {nextUp.activity.description}
+                      </p>
+                    )}
+                  </div>
+                  {nextUp.activity.location && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        openMaps(
+                          nextUp.activity.location!.lat,
+                          nextUp.activity.location!.lng,
+                          nextUp.activity.location!.name
+                        )
+                      }}
+                      className="flex-shrink-0 p-3 bg-accent hover:bg-accent/90 rounded-xl text-accent-foreground transition-colors"
+                      aria-label="Get directions"
+                    >
+                      <NavigationArrow size={20} weight="fill" />
+                    </button>
+                  )}
+                </div>
+              </Card>
+            </motion.div>
+          )}
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -132,7 +185,7 @@ export default function App() {
                   className="bg-accent hover:bg-accent/90 text-accent-foreground"
                 >
                   <MapPin size={16} weight="fill" className="mr-2" />
-                  Get Directions
+                  Leiðarlýsing
                 </Button>
               </div>
             </div>
@@ -147,77 +200,84 @@ export default function App() {
             <HourlyWeatherCard />
           </motion.div>
 
-          {upcomingDays.length > 0 && (
+          {activeDays.length > 0 && (
             <>
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-foreground flex items-center gap-2 mb-4">
                   <CalendarDots size={28} weight="duotone" className="text-primary" />
-                  Næsta dagskrá
+                  Dagskrá
                 </h2>
               </div>
 
               <div className="grid gap-4">
                 <AnimatePresence>
-                  {itinerary
-                    .filter(day => upcomingDays.includes(day.id))
-                    .map((day, index) => (
-                      <motion.div
-                        key={day.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                        whileHover={{ y: -4, transition: { duration: 0.15 } }}
+                  {activeDays.map((day, index) => (
+                    <motion.div
+                      key={day.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                      whileHover={{ y: -4, transition: { duration: 0.15 } }}
+                    >
+                      <button
+                        onClick={() => setSelectedDay(day)}
+                        className="w-full bg-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-200 border border-border text-left group"
                       >
-                        <button
-                          onClick={() => setSelectedDay(day)}
-                          className="w-full bg-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-200 border border-border text-left group"
-                        >
-                          <div className="flex items-start gap-4 mb-4">
-                            <div className="flex-shrink-0 text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-200">
-                              {day.emoji}
+                        <div className="flex items-start gap-4 mb-4">
+                          <div className="flex-shrink-0 text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-200">
+                            {day.emoji}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-baseline gap-2 mb-1 flex-wrap">
+                              <h3 className="text-xl md:text-2xl font-bold text-foreground">
+                                {day.title}
+                              </h3>
+                              <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
+                                {day.dayName}
+                              </span>
+                              {isToday(day) && (
+                                <span className="text-xs font-bold text-accent bg-accent/15 px-2.5 py-1 rounded-full">
+                                  Í DAG
+                                </span>
+                              )}
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-baseline gap-2 mb-1 flex-wrap">
-                                <h3 className="text-xl md:text-2xl font-bold text-foreground">
-                                  {day.title}
-                                </h3>
-                                <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
-                                  {day.dayName}
-                                </span>
-                              </div>
-                              <p className="text-sm text-muted-foreground mb-2">{day.date}</p>
-                              <p className="text-sm text-foreground/80 italic">{day.summary}</p>
-                              <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-                                <span className="flex items-center gap-1">
-                                  <CalendarDots size={14} weight="duotone" />
-                                  {day.activities.length} activities
-                                </span>
-                              </div>
+                            <p className="text-sm text-muted-foreground mb-2">{day.date}</p>
+                            <p className="text-sm text-foreground/80 italic">{day.summary}</p>
+                            <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <CalendarDots size={14} weight="duotone" />
+                                {day.activities.length} atriði
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock size={14} weight="duotone" />
+                                {formatTimeDisplay(day.activities[0].time)} – {formatTimeDisplay(day.activities[day.activities.length - 1].time)}
+                              </span>
                             </div>
                           </div>
-                          <WeatherCard weather={day.weather} compact />
-                        </button>
-                      </motion.div>
-                    ))}
+                        </div>
+                        <WeatherCard weather={day.weather} compact />
+                      </button>
+                    </motion.div>
+                  ))}
                 </AnimatePresence>
               </div>
             </>
           )}
 
-          {completedDays.length > 0 && (
+          {pastDays.length > 0 && (
             <div className="mt-8">
               <button
-                onClick={() => setShowCompleted(!showCompleted)}
+                onClick={() => setShowPastDays(!showPastDays)}
                 className="w-full flex items-center justify-between p-4 bg-muted/50 hover:bg-muted rounded-xl transition-colors mb-4"
               >
                 <div className="flex items-center gap-3">
-                  <CheckCircle size={24} weight="fill" className="text-primary" />
-                  <h2 className="text-xl font-bold text-foreground">
-                    Liðin dagskrá ({completedDays.length})
+                  <Eye size={24} weight="duotone" className="text-muted-foreground" />
+                  <h2 className="text-lg font-bold text-foreground">
+                    Liðnir dagar ({pastDays.length})
                   </h2>
                 </div>
                 <motion.div
-                  animate={{ rotate: showCompleted ? 180 : 0 }}
+                  animate={{ rotate: showPastDays ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
                   <CaretDown size={24} weight="bold" className="text-muted-foreground" />
@@ -225,7 +285,7 @@ export default function App() {
               </button>
 
               <AnimatePresence>
-                {showCompleted && (
+                {showPastDays && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
@@ -234,48 +294,39 @@ export default function App() {
                     className="overflow-hidden"
                   >
                     <div className="grid gap-4">
-                      {itinerary
-                        .filter(day => completedDays.includes(day.id))
-                        .map((day, index) => (
-                          <motion.div
-                            key={day.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
-                            whileHover={{ y: -4, transition: { duration: 0.15 } }}
+                      {pastDays.map((day, index) => (
+                        <motion.div
+                          key={day.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                          whileHover={{ y: -4, transition: { duration: 0.15 } }}
+                        >
+                          <button
+                            onClick={() => setSelectedDay(day)}
+                            className="w-full bg-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-200 border border-border text-left group opacity-75"
                           >
-                            <button
-                              onClick={() => setSelectedDay(day)}
-                              className="w-full bg-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-200 border border-border text-left group opacity-75"
-                            >
-                              <div className="flex items-start gap-4 mb-4">
-                                <div className="flex-shrink-0 text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-200">
-                                  {day.emoji}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-baseline gap-2 mb-1 flex-wrap">
-                                    <h3 className="text-xl md:text-2xl font-bold text-foreground">
-                                      {day.title}
-                                    </h3>
-                                    <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
-                                      {day.dayName}
-                                    </span>
-                                    <CheckCircle size={20} weight="fill" className="text-primary" />
-                                  </div>
-                                  <p className="text-sm text-muted-foreground mb-2">{day.date}</p>
-                                  <p className="text-sm text-foreground/80 italic">{day.summary}</p>
-                                  <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-                                    <span className="flex items-center gap-1">
-                                      <CalendarDots size={14} weight="duotone" />
-                                      {day.activities.length} activities
-                                    </span>
-                                  </div>
-                                </div>
+                            <div className="flex items-start gap-4 mb-4">
+                              <div className="flex-shrink-0 text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-200">
+                                {day.emoji}
                               </div>
-                              <WeatherCard weather={day.weather} compact />
-                            </button>
-                          </motion.div>
-                        ))}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-baseline gap-2 mb-1 flex-wrap">
+                                  <h3 className="text-xl md:text-2xl font-bold text-foreground">
+                                    {day.title}
+                                  </h3>
+                                  <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
+                                    {day.dayName}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">{day.date}</p>
+                                <p className="text-sm text-foreground/80 italic">{day.summary}</p>
+                              </div>
+                            </div>
+                            <WeatherCard weather={day.weather} compact />
+                          </button>
+                        </motion.div>
+                      ))}
                     </div>
                   </motion.div>
                 )}
