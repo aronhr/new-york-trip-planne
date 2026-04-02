@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, CaretDown, CheckCircle } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { WeatherCard } from '@/components/WeatherCard'
 import { McDonaldsLocator } from '@/components/McDonaldsLocator'
 import { ActivityCard } from '@/components/ActivityCard'
@@ -17,6 +18,7 @@ export function DayView({ day, onBack }: DayViewProps) {
   const [showCompleted, setShowCompleted] = useState(false)
   const [completedActivities, setCompletedActivities] = useState<string[]>([])
   const [upcomingActivities, setUpcomingActivities] = useState<string[]>([])
+  const [completionRate, setCompletionRate] = useState(0)
 
   useEffect(() => {
     const checkActivities = async () => {
@@ -34,6 +36,11 @@ export function DayView({ day, onBack }: DayViewProps) {
 
       setCompletedActivities(completed)
       setUpcomingActivities(upcoming)
+      
+      const rate = day.activities.length > 0 
+        ? Math.round((completed.length / day.activities.length) * 100)
+        : 0
+      setCompletionRate(rate)
     }
 
     checkActivities()
@@ -95,6 +102,33 @@ export function DayView({ day, onBack }: DayViewProps) {
               </div>
             </div>
             <WeatherCard weather={day.weather} />
+            
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="mt-4"
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium text-foreground">Daily Progress</span>
+                  <span className="text-muted-foreground">
+                    {completedActivities.length} / {day.activities.length} completed
+                  </span>
+                </div>
+                <Progress value={completionRate} className="h-3" />
+                {completionRate === 100 && (
+                  <motion.p
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-xs text-primary font-medium flex items-center gap-1"
+                  >
+                    <CheckCircle size={14} weight="fill" />
+                    All activities completed! 🎉
+                  </motion.p>
+                )}
+              </div>
+            </motion.div>
           </div>
         </motion.header>
 
