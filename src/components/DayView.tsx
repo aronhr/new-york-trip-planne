@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { ArrowLeft } from '@phosphor-icons/react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'-motion'
 import { McDonaldsLocator } from '@/components/McDonaldsLocator'
-import { WeatherCard } from '@/components/WeatherCard'
 import { ActivityCard } from '@/components/ActivityCard'
 import type { Day } from '@/data/itinerary'
 
@@ -18,6 +16,7 @@ export function DayView({ day, onBack }: DayViewProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       <div className="absolute inset-0 opacity-30 pointer-events-none">
+        <div className="absolute inset-0" style={{
         <div className="absolute inset-0" style={{
           backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, oklch(0.85 0.15 85 / 0.03) 35px, oklch(0.85 0.15 85 / 0.03) 70px)`
         }} />
@@ -35,7 +34,6 @@ export function DayView({ day, onBack }: DayViewProps) {
         🍔
       </motion.button>
 
-      <AnimatePresence>
         {showMcDonalds && <McDonaldsLocator onClose={() => setShowMcDonalds(false)} />}
       </AnimatePresence>
 
